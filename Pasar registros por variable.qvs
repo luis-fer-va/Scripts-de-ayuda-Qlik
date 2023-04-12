@@ -1,0 +1,26 @@
+category:
+LOAD concat(DISTINCT  chr(39)&categorias & chr(39) ,',')as categorias //concatena los registros separados por coma.
+
+FROM
+[category.xlsx]
+(ooxml, embedded labels, table is Sheet1);
+
+let vCategorias= peek('categorias',-1,'category'); //Almacena en la variable los registros concatenados.
+trace $(vCategorias);
+
+ODBC CONNECT TO mis_finanzas;
+LOAD id,
+    fecha,
+    descripcion,
+    categoria,
+    gastos,
+    ingresos,
+    ahorro;
+SQL SELECT id,
+    fecha,
+    descripcion,
+    categoria,
+    gastos,
+    ingresos,
+    ahorro
+FROM `mis_finanzas`.finanzasv2 where categoria in($(vCategorias)); //uso de la variable sobre una sentencia where in.
