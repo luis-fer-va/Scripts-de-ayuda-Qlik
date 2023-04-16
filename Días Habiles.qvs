@@ -1,0 +1,32 @@
+//Cargue días festivos.
+Festivos:
+LOAD 
+     Concat(DISTINCT chr(39)&trim(Festivo)&chr(39),',') as FestivosCol 
+FROM
+[..\02_Fuentes_Externas\Festivos Compensar.xlsx]
+(ooxml, embedded labels, table is [Días Festivos]);
+
+Let Festivos = Peek('FestivosCol',-1,'Festivos'); //Acumula en una variable todos los registros de FestivosCol.
+
+Trace $(Festivos);
+
+drop table Festivos;
+
+load*,
+if(WeekDay(FechaModificada2)=6,
+	Date(FechaModificada2+2,'DD/MM/YYYY'), //si la fecha esta en un dia sabado le suma dos días. 
+		if(WeekDay(FechaModificada2)=0,
+			Date(FechaModificada2+1,'DD/MM/YYYY'),
+                Date(FechaModificada2,'DD/MM/YYYY')) //si la fecha esta en un dia domingo le suma un día. 
+	) as [F ABONO];
+load *,
+if(flagFestivo=0,
+    Date(FechaModificada+1),    
+        date(FechaModificada,'DD/MM/YYYY')) as FechaModificada2 //si flagfestivo es igual a 0 le suma un dia a la fecha
+;
+LOAD *,
+    Date([F VALE]+1) as FechaModificada, //Añade un dia a cada registro
+    NetWorkdays(Date([F VALE]),Date([F VALE]+1),$(Festivos)) as flagFestivo; //Marca los dias festivos y fds como 0
+LOAD 
+    [F VALE]
+from archivo.xlsx;
