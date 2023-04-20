@@ -1,5 +1,9 @@
 
-/*La variable SET Verbatim=1 en Qlik Sense indica que se deben interpretar los caracteres especiales en el script de carga de datos de manera literal. Esto significa que los caracteres especiales se interpretarán como parte del texto y no como caracteres especiales que indican el inicio o fin de una cadena o expresión. Esta variable se utiliza cuando se necesita incluir caracteres especiales en una cadena de texto sin tener que agregar un carácter de escape para que se interprete correctamente. Sin embargo, es recomendable utilizar esta variable con precaución y solo cuando sea necesario para evitar errores en el script.*/
+/*La variable SET Verbatim=1 en Qlik Sense indica que se deben interpretar los caracteres especiales en el script de carga de datos de manera literal. 
+Esto significa que los caracteres especiales se interpretarán como parte del texto y no como caracteres especiales que indican el inicio o fin de una cadena o expresión. 
+Esta variable se utiliza cuando se necesita incluir caracteres especiales en una cadena de texto sin tener que agregar un carácter de escape 
+para que se interprete correctamente. Sin embargo, es recomendable utilizar esta variable con precaución
+y solo cuando sea necesario para evitar errores en el script.*/
 
 SET Verbatim=1;
 
