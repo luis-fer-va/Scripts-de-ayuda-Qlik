@@ -1,0 +1,28 @@
+
+/*La variable SET Verbatim=1 en Qlik Sense indica que se deben interpretar los caracteres especiales en el script de carga de datos de manera literal. Esto significa que los caracteres especiales se interpretarán como parte del texto y no como caracteres especiales que indican el inicio o fin de una cadena o expresión. Esta variable se utiliza cuando se necesita incluir caracteres especiales en una cadena de texto sin tener que agregar un carácter de escape para que se interprete correctamente. Sin embargo, es recomendable utilizar esta variable con precaución y solo cuando sea necesario para evitar errores en el script.*/
+
+SET Verbatim=1;
+
+//Sección de mapeo de espacios
+Map_Spaces:
+Mapping Load
+    Repeat(' ',RowNo()) as Input, //Genera una cadena de espacios del 1 al 100
+    ' ' as Output //Reemplaza cualquier cantidad de espacios en blanco por uno solo.
+Autogenerate 100;
+
+//Sección de carga de datos
+Data:
+Load
+Trim(Name)&'|'& len(Trim(Name)) as Trim, //Quita los espacios que esten a la izquierda o derecha de la cadena.
+rtrim(Name)&'|'& len(rtrim(Name)) as rtrim,//Quita los espacios que esten a la derecha de la cadena.
+LTrim(Name)&'|'& len(LTrim(Name)) as LTrim,//Quita los espacios que esten a la izquierda de la cadena.
+trim(MapSubString('Map_Spaces',Name)) as Name, //Quita los espacios en blanco en el centro de la cadena.
+len(trim(MapSubString('Map_Spaces',Name))) as NumCaracteres, //Cuenta el numero de caracteres de la cadena.
+RowNo() as ID; //Asigna un identificador unico a cada fila
+Load * Inline [
+    Name,Ubicacion espacios
+    'United Kingdom 001', 'sin espacios'
+    '   United Kingdom 001', 'Espacios a la izquierda'
+    'United Kingdom 001   ', 'Espacios a la derecha'
+    '  United Kingdom 001  ', 'Espacios a ambos lados'
+];
