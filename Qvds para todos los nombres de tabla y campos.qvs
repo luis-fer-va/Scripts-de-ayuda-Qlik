@@ -1,0 +1,50 @@
+//Tabla para realización del ejericio
+Ventas:
+Load * Inline [
+    Usuario,Venta
+    Lukas,5000
+    marco,80000
+    Maria,10000
+];
+
+Gastos:
+Load * Inline [
+    Gastos,mes
+    5000,10
+    80000,11
+    10000,12
+];
+
+let vTituloApliacion= DocumentTitle(); //Obtiene el nombre de la aplicación.
+
+/*Creación de variables para obtención de información de tablas cargadas previamente.*/
+let vNumero_de_tablas = NoOfTables(); //Almacena el numero de tablas previamente cargadas
+
+//El indice del for empieza en 0
+For vTableNo = 0 to $(vNumero_de_tablas) - 1 //Itera desde el 0 hasta el numero de tablas.
+    let vNombre_de_tablas = TableName($(vTableNo)); //Almacena el nombre de las tablas.
+
+    Let vNumero_de_campos = NoOfFields('$(vNombre_de_tablas)'); //Almacena el numero de campos
+    Let vTotal_filas = NoOfRows('$(vNombre_de_tablas)');  //Almacena el numero de filas por tabla.
+
+    [Datos de tabla]:
+    Load 
+        '$(vTituloApliacion)' as Nombre_Aplicacion
+        ,'$(vNombre_de_tablas)' as Nombre_tabla
+        ,'$(vNumero_de_campos)' as Numero_de_campos
+        ,'$(vTotal_Filas)' as Total_filas
+    Autogenerate 1;
+
+    For vFieldNo = 1 to vNumero_de_campos //Itera desde 1 hasta el numero de campos
+
+        let vFieldName= FieldName(vFieldNo, '$(vNombre_de_tablas)'); //Almacena el nombre del campo.
+
+        CamposDeTabla:
+        Load
+            '$(vNombre_de_tablas)' as Tabla,
+            '$(vFieldName)' as Campos
+        Autogenerate 1;
+
+    next vFieldNo;
+
+Next vTableNo;
