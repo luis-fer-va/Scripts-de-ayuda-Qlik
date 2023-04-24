@@ -1,0 +1,37 @@
+// Esta es la subrutina que almacena la tabla cargada en un archivo QVD.
+sub sub_store
+
+	// Esta línea almacena la tabla "Tabla_almacenar" en un archivo QVD.
+	STORE Tabla_almacenar Into [$(ruta_almacenar_Qvd)$(nombre_archivo).qvd](qvd);
+	drop Table Tabla_almacenar;
+	
+	// Esta línea establece la variable de tabla en nula para liberar la memoria utilizada por la tabla temporal.
+	let vTabla_almacenar= Null();
+	
+ENDSUB // Esta es la finalización de la subrutina.
+
+tabla_tmp_0:
+LOAD pk_Fecha, 
+     Descripcion, 
+     Categoria, 
+     Ingresos, 
+     Gastos, 
+     Ahorro, 
+     pk_Gastos, 
+     pk_Ppto
+FROM
+[data.csv];
+
+// Esta línea renombra la tabla temporal creada anteriormente a "Tabla_almacenar".
+RENAME Table tabla_tmp_0 TO  Tabla_almacenar;
+
+// Esta línea establece la variable "ruta_almacenar_Qvd" en la ruta donde se almacenará la tabla cargada.
+set ruta_almacenar_Qvd = '..\..\..\..\data\04-QVD\Transform\';
+
+// Esta línea establece la variable "nombre_archivo" en el nombre del archivo donde se almacenará la tabla cargada.
+set nombre_archivo = 'prueba';
+
+// Esta línea llama a la subrutina "sub_store" para almacenar la tabla "Tabla_almacenar" en un archivo QVD.
+CALL sub_store;
+
+EXIT SCRIPT;
