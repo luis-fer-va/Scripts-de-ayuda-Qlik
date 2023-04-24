@@ -1,0 +1,41 @@
+SET CreateSearchIndexOnReload=0; //Igualar variable a 0
+
+Let vStartDate = Num(Date#('01/01/2022','DD/MM/YYYY')); //Variable con una fecha inicial.
+Let vEndDate= Num(Date#('31/12/2023','DD/MM/YYYY')); //Variable con una fecha final.
+
+//Tabla que contiene datos de fechas.
+Temp_orderDate:
+Load Date(floor($(vStartDate)+ IterNo()-1 )) as OrderDate
+AutoGenerate 1
+while $(vStartDate) + IterNo()-1  <= $(vEndDate);
+
+//Tabla que contiene datos de dias
+temp_dias:
+Load * Inline [
+	Dia
+    1
+    2
+    3
+    4
+    5
+];
+
+LOAD
+    OrderDate,
+    Sale,
+    Customer,
+    Chanel
+FROM [lib://datos/sales.Qvd]
+(qvd) where Exists(OrderDate);
+
+LOAD
+    Dia,
+    Sale,
+    Customer,
+    Chanel
+FROM [lib://datos/sales.Qvd]
+(qvd) where Exists(Dia);
+
+drop table temp_dias;
+let vStartDate = Null();
+Let vEndDate=Null();
