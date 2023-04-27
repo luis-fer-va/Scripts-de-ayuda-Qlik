@@ -1,0 +1,28 @@
+sales:
+LOAD [Order No], 
+     Product, 
+     Qty, 
+     [Sales Price]
+FROM
+[..\..\..\..\..\Desktop\interval.xlsx]
+(ooxml, embedded labels, table is Sales);
+
+Descuento:
+LOAD MinQty, 
+     MaxQty, 
+     Discount,
+     Product
+FROM
+[..\..\..\..\..\Desktop\interval.xlsx]
+(ooxml, embedded labels, table is DiscountNew);
+
+/*Este fragmento toma los campos Qtys y Products de la tabla Sales 
+y los une con los campos MinQty, MaxQty y Products de la tabla Discount 
+utilizando la función IntervalMatch. Esta función compara cada valor de Qtys
+ con los intervalos definidos por MinQty y MaxQty y agrega el valor 
+ correspondiente de Products a la tabla Discount.*/
+
+inner join IntervalMatch(Qty,Product)
+LOAD MinQty,MaxQty,Product Resident Descuento;
+
+drop Field Product From Descuento;
