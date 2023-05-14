@@ -1,0 +1,2 @@
+NullAsValue campo;
+set NullValue='Not Shipped';
