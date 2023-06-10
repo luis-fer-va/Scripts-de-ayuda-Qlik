@@ -1,0 +1,35 @@
+tabla_datos:
+LOAD * INLINE [
+    Departamento, Identificacion, Existencias, Descripción
+    D, 960, A1, Martillo
+    D, 961, A2, Clavos
+    D, 962, B1, Juego de brocas
+    D, 334, A1, Martillo
+    D, 334, B3, Tornillo
+    D, 334, C4, Sierra mecánica
+    D, 701, D1, Peleón
+    D, 702, D1, Peleón
+    D, 703, F1, Batería
+    D, 999, B1, Juego de brocas
+    D, 966, A1, Martillo
+    D, 966, A2, Clavos
+    D, 966, D1, Peleón
+    D, 966, F1, Batería
+    D, 966, C4, Sierra mecánica
+    D, 966, B3, Tornillo
+];
+
+repetidos_identificacion:
+load * where Repeticiones = 1 ;
+LOAD
+    Departamento,
+    Identificacion,
+    Existencias,
+    Descripción,
+    Sum(If(Identificacion <> Previous(Identificacion), 1, 0)) as Repeticiones
+Resident tabla_datos
+Group By Departamento, Identificacion, Existencias, Descripción;
+
+DROP Table tabla_datos;
+
+EXIT SCRIPT;
